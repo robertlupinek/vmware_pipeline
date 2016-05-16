@@ -14,22 +14,9 @@ This project is the combination of several tools with the aim of creating an aut
   custom_dns1
   custom_dns2
 
-3.   What ever process you use to create the VM you will want to be sure to include the configure_network.sh and a first boot scripts to trigger your network configuration.  The configure_network.sh is what I use to automatically configure the network using the `vmtoolsd --cmd='info-get guestinfo.ovfEnv'` command.  You can run the command manually as well. I included my first boot script as an example:
+3.   What ever process you use to create the VM you will want to be sure to include the configure_network.sh and a first boot scripts to trigger your network configuration.  The configure_network.sh is what I use to automatically configure the network using the `vmtoolsd --cmd='info-get guestinfo.ovfEnv'` command.  You can run the command manually as well. 
   
-  #!/bin/bash
-  #First boot script for EL 7 systemd
-  #It needs to run from /usr/local/bin
 
-  #Attempt to autoconfigure network
-  /usr/local/bin/configure_network.sh auto
-
-  #Disable puppet
-  systemctl stop puppet
-  systemctl disable puppet
-
-  #Disable first boot
-  systemctl disable firstboot.service
-  
 4. I also included an example firstboot service for systemd that calls the steps outlined in step 3:
 
   [Unit]
