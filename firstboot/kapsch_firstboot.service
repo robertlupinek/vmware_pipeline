@@ -1,0 +1,11 @@
+[Unit]
+Description=This service executes a script after the network is up.
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/firstboot.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
