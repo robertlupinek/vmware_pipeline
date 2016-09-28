@@ -94,12 +94,23 @@ class simple_foreman:
             print api_function.upper() + " with a value of '" + match_value + "' was not found."
             sys.exit(-1) 
 
-    def get_compute(self,id):
+    def get_compute(self,id,compute_resource_id):
         #Get json formated data
         api_function = "compute_profiles/"
         data = self.get_json(self.foreman_api + api_function + id  )
+ 
+        #Return the index of the compute profile list that contains the compute resource in question.
+        compute_profile_index = 0
+        print "Searching for compute resource id",( compute_resource_id )
+        for list_index, list_item in enumerate(data['compute_attributes']):
+          print "THE COMPUTE RESOURCE ID"
+          print list_item['compute_resource_id']
+          if str( list_item['compute_resource_id'] ) == str( compute_resource_id ):
+            print "Found it!"
+            print list_index 
+            compute_profile_index = list_index
         #Return the compute attributes for the compute profile specified
-        return data['compute_attributes'][0]['vm_attrs']
+        return data['compute_attributes'][compute_profile_index]['vm_attrs']
     
     def get_data(self,function,id):
         #Get json formated data
@@ -215,7 +226,7 @@ class simple_foreman:
         if compute_resource:
             new_host_data['host']['compute_resource_id'] = self.get_id(compute_resource,"compute_resources")
             #Pull the compute attributes defined for the specified compute profile
-            compute_attributes = self.get_compute( str( hostgroup_data["compute_profile_id"] ) )
+            compute_attributes = self.get_compute( str( hostgroup_data["compute_profile_id"] ),str(new_host_data['host']['compute_resource_id']  ) )
             #Modify the compute attributes after the profile sets this data...
             if cluster:
               compute_attributes['cluster'] = cluster
